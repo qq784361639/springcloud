@@ -1,6 +1,8 @@
 package com.bes.provider.domain;
 
-public class Websites {
+import java.io.Serializable;
+
+public class Websites implements Serializable {
     private Integer id;
 
     private String name;

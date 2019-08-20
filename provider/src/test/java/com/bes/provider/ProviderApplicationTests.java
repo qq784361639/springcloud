@@ -28,4 +28,16 @@ public class ProviderApplicationTests {
         webSitesService.addWebSitesA(websites,websites1);
     }
 
+    @Test
+    public void testGetWebsitesByid() {
+        Websites websitesById = webSitesService.getWebsitesById(8);
+        System.out.println(websitesById);
+    }
+
+    @Test
+    public void testDeleteWebsitesByid() {
+        int websitesById = webSitesService.deleteWebsitesById(22);
+        System.out.println(websitesById);
+    }
+
 }

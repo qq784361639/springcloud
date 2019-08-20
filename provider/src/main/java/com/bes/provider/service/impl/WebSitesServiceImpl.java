@@ -1,11 +1,15 @@
 package com.bes.provider.service.impl;
 
+import com.bes.provider.config.RedisHelper;
 import com.bes.provider.dao.WebsitesMapper;
 import com.bes.provider.domain.Websites;
 import com.bes.provider.service.WebSitesService;
 import com.bes.provider.service.WebSitesServiceB;
 import com.codingapi.txlcn.tc.annotation.LcnTransaction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +21,9 @@ public class WebSitesServiceImpl implements WebSitesService {
 
     @Autowired
     private WebSitesServiceB webSitesServiceB;
+
+    @Autowired
+    private RedisHelper redisHelper;
 
     @Override
     @Transactional
@@ -53,6 +60,19 @@ public class WebSitesServiceImpl implements WebSitesService {
         } catch (Exception e) {
             throw e;
         }
+    }
+
+    @Override
+    @Cacheable(value="websites", key="'websites_'+#id")
+    public Websites getWebsitesById(Integer id) {
+        Websites websites = websitesMapper.selectByPrimaryKey(id);
+        return websites;
+    }
+
+    @Override
+    @CacheEvict(value = "websites", key="'websites_'+#id", beforeInvocation = true)
+    public int deleteWebsitesById(Integer id) {
+        return websitesMapper.deleteByPrimaryKey(id);
     }
 
 }
